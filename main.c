@@ -5,6 +5,13 @@
 #include <stdio.h>
 #include <assert.h>
 
+struct Node {
+    int space;
+    struct Node* next;
+};
+
+
+
 char heap[HEAP_SIZE];
 int left = HEAP_SIZE;
 
