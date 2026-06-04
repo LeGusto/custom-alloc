@@ -30,6 +30,11 @@ void* c_malloc(int req) {
     return rt;
 }
 
+void c_reset(void) {
+    free_ptr = &heap[0];
+    left = HEAP_SIZE;
+}
+
 void c_free(unsigned char* ptr) {
     while (ptr < (unsigned char*)h_end
         && *ptr != end_sentinel) {
