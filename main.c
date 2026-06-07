@@ -21,25 +21,30 @@ void* h_end = &heap[0] + HEAP_SIZE;
 
 
 void* c_malloc(int req) {
+    if (req <= 0) return NULL;
+
     Node* head = (Node*)&heap[0];
 
-    while (!head->free && head->next) {
-
+    while (head) {
         if (head->free && head->space >= req) {
-            
+            int remaining = head->space - req;
+            if (remaining > (int)sizeof(Node)) {
+                Node* split = (Node*)((char*)(head + 1) + req);
+                split->space = remaining - sizeof(Node);
+                split->free = 1;
+                split->next = head->next;
+
+                head->next = split;
+                head->space = req;
+            }
+
+            head->free = 0;
+            return (void*)(head + 1);  // payload sits right after the header
         }
         head = head->next;
     }
-    
-    return NULL;
-    // if (req  + 1 > left) return NULL;
-    // void* rt = free_ptr;
-    // free_ptr += req;
-    // *(char*)free_ptr = end_sentinel;
-    // free_ptr++;
-    // left -= req + 1;
 
-    // return rt;
+    return NULL;
 }
 
 void c_reset(void) {
