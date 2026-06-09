@@ -52,12 +52,16 @@ void c_reset(void) {
     // left = HEAP_SIZE;
 }
 
-void c_free(unsigned char* ptr) {
-    // while (ptr < (unsigned char*)h_end
-    //     && *ptr != end_sentinel) {
-    //     *ptr = 0;
-    //     ptr++;
-    // }
+void c_free(void* ptr) {
+    if (!ptr) return;
+
+    Node* node = (Node*)ptr - 1;  
+    node->free = 1;
+
+    while (node->next && node->next->free) {
+        node->space += sizeof(Node) + node->next->space;
+        node->next = node->next->next;
+    }
 }
 
 int main(int argc, char** argv[]) {
