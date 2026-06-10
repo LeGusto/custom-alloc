@@ -48,8 +48,10 @@ void* c_malloc(int req) {
 }
 
 void c_reset(void) {
-    // free_ptr = &heap[0];
-    // left = HEAP_SIZE;
+    Node* head = (Node*)&heap[0];
+    head->space = HEAP_SIZE - sizeof(Node);
+    head->free = 1;
+    head->next = NULL;
 }
 
 void c_free(void* ptr) {
@@ -64,7 +66,7 @@ void c_free(void* ptr) {
     }
 }
 
-int main(int argc, char** argv[]) {
+int main(int argc, char** argv) {
     memset(&heap[0], 0, HEAP_SIZE);
     Node* head = (Node*)&heap[0];
 
